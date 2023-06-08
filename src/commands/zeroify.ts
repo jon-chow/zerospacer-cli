@@ -43,7 +43,7 @@ export async function zeroify(options: OptionValues): Promise<void> {
 
 			// Write the unzeroified file to the output path.
 			fs.writeFileSync(outputPath, unzeroified.join(""), "utf8");
-			logMessage(`Successfully ${ undo ? "un" : "" }zeroified '${inputPath}' and saved it to "${outputPath}"`);
+			logMessage(`Successfully ${ undo ? "un" : "" }zeroified "${inputPath}" and saved it to "${outputPath}"`);
 		});
 	} catch (error) {
 		logError("An error occurred while zeroifying the file!");
