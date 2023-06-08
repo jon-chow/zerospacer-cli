@@ -1,0 +1,44 @@
+import { OptionValues } from "commander";
+import fs from "fs";
+import fsPromises from "fs/promises";
+import path from "path";
+import { logError, logMessage } from "../utils/logger";
+
+
+/**
+ * @description Adds zero-width whitespaces to a project.
+ * @param {*} options.input Input file
+ * @param {*} options.output Output file
+ * @param {*} options.undo Undo zeroification (default: false)
+ */
+export async function zeroify(options: OptionValues): Promise<void> {
+	try {
+		const { input, output, undo } = options;
+		const inputPath = path.resolve(input);
+		const outputPath = path.resolve(output);
+
+		await fsPromises.readFile(inputPath, "utf8").then((data: string) => {
+			let unzeroified = data.split("");
+
+			if (undo) {
+				// Remove the zero-width whitespaces from the input file.
+				unzeroified.map((char: string, index: number) => {
+					if (char.charCodeAt(0) === 8203)
+						unzeroified[index] = "";
+				});
+			} else {
+				// Convert the input file to zero-width whitespaces.
+				unzeroified.map((char: string, index: number) => {
+					if (char.charCodeAt(0) === 32)
+						unzeroified[index] = "\u200B";
+				});
+			};
+
+			// Write the unzeroified file to the output path.
+			fs.writeFileSync(outputPath, unzeroified.join(""), "utf8");
+			logMessage(`Successfully unzeroified ${inputPath} and saved it to ${outputPath}!`);
+		});
+	} catch (error) {
+		logError("Error: You must specify an input file!");
+	};
+};

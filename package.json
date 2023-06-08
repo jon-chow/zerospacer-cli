@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc --watch",
-    "start": "node dist/index.js -h",
+    "start": "node dist/index.js -i test.txt -o test2.txt",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
