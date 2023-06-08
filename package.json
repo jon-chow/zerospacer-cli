@@ -1,6 +1,6 @@
 {
   "name": "@jon-chow/zerospacer-cli",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A CLI to insert zero-width spaces into text.",
   "main": "dist/index.js",
   "bin": {
