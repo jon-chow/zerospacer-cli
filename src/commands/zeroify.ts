@@ -14,8 +14,16 @@ import { logError, logMessage } from "../utils/logger";
 export async function zeroify(options: OptionValues): Promise<void> {
 	try {
 		const { input, output, undo } = options;
-		const inputPath = path.resolve(input);
-		const outputPath = path.resolve(output);
+		let inputPath = path.resolve(__dirname, "..", input);
+		let outputPath: string;
+
+		// Check if output file is specified.
+		// If not, use the input file as the output file.
+		try {
+			outputPath = path.resolve(__dirname, "..", output);
+		} catch (error) {
+			outputPath = inputPath;
+		};
 
 		await fsPromises.readFile(inputPath, "utf8").then((data: string) => {
 			let unzeroified = data.split("");
@@ -28,15 +36,14 @@ export async function zeroify(options: OptionValues): Promise<void> {
 				});
 			} else {
 				// Convert the input file to zero-width whitespaces.
-				unzeroified.map((char: string, index: number) => {
-					if (char.charCodeAt(0) === 32)
-						unzeroified[index] = "\u200B";
+				unzeroified = unzeroified.map((char: string) => {
+					return char + "\u200B";
 				});
 			};
 
 			// Write the unzeroified file to the output path.
 			fs.writeFileSync(outputPath, unzeroified.join(""), "utf8");
-			logMessage(`Successfully unzeroified ${inputPath} and saved it to ${outputPath}!`);
+			logMessage(`Successfully ${ undo ? "un" : "" }zeroified '${input}' and saved it to "${outputPath}"`);
 		});
 	} catch (error) {
 		logError("Error: You must specify an input file!");
