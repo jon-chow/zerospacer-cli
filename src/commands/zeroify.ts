@@ -14,13 +14,13 @@ import { logError, logMessage } from "../utils/logger";
 export async function zeroify(options: OptionValues): Promise<void> {
 	try {
 		const { input, output, undo } = options;
-		let inputPath = path.resolve(__dirname, "..", input);
+		let inputPath = path.resolve(input);
 		let outputPath: string;
 
 		// Check if output file is specified.
 		// If not, use the input file as the output file.
 		try {
-			outputPath = path.resolve(__dirname, "..", output);
+			outputPath = path.resolve(output);
 		} catch (error) {
 			outputPath = inputPath;
 		};
@@ -43,9 +43,10 @@ export async function zeroify(options: OptionValues): Promise<void> {
 
 			// Write the unzeroified file to the output path.
 			fs.writeFileSync(outputPath, unzeroified.join(""), "utf8");
-			logMessage(`Successfully ${ undo ? "un" : "" }zeroified '${input}' and saved it to "${outputPath}"`);
+			logMessage(`Successfully ${ undo ? "un" : "" }zeroified '${inputPath}' and saved it to "${outputPath}"`);
 		});
 	} catch (error) {
-		logError("Error: You must specify an input file!");
+		logError("An error occurred while zeroifying the file!");
+		process.exit(1);
 	};
 };

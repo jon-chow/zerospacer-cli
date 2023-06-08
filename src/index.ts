@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 import { Command, OptionValues } from "commander";
 import chalk from "chalk";
 import figlet from "figlet";
@@ -7,9 +8,7 @@ import { zeroify } from "./commands/zeroify";
 
 const program = new Command();
 
-console.log(chalk.cyan(figlet.textSync(
-	"Zerospacer CLI"
-)));
+console.log(chalk.cyan(figlet.textSync("Zerospacer CLI")));
 
 program
 	.version("1.0.0")
@@ -22,8 +21,9 @@ program
 		if (process.argv.slice(2).length === 0) {
 			program.outputHelp();
 			return;
-		};
+		}
 
+		// Zeroify the input file.
 		zeroify(options);
 	})
 	.parse(process.argv);
